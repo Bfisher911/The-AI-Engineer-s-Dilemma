@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: LLM Benchmark Showdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Teal/Amber Accents -->
+    <!-- Application Structure Plan: The application follows a narrative structure. It starts with the core problem (The Engineer's Dilemma), explains the key enabling technology (Quantization), presents the core data in an interactive dashboard (On-Device Showdown), introduces the alternative (Cloud API), provides a final performance verdict, and concludes with an actionable decision matrix. This structure was chosen to guide the user through a story of discovery and analysis, making the complex trade-offs presented in the lab report more intuitive and engaging than a simple data dump. -->
+    <!-- Visualization & Content Choices: 
+        - Quantization Diagram: Report Info -> 16-bit vs 4-bit memory usage. Goal -> Inform. Viz -> Styled HTML divs. Interaction -> None. Justification -> Simple, clear visual metaphor for a key concept without needing complex charts. Library -> HTML/CSS.
+        - Resource/Speed Charts: Report Info -> VRAM, RAM, and time metrics. Goal -> Compare. Viz -> Grouped Bar Charts. Interaction -> Tooltips on hover. Justification -> Ideal for comparing multiple metrics across the same categories (models). Library -> Chart.js/Canvas.
+        - API Stats: Report Info -> N/A for local metrics, shift to monetary cost. Goal -> Contrast. Viz -> Stat cards. Interaction -> None. Justification -> High-impact way to show conceptual differences. Library -> HTML/CSS.
+        - Final Time Comparison: Report Info -> Total generation time for all models. Goal -> Rank. Viz -> Horizontal Bar Chart. Interaction -> Tooltips on hover. Justification -> Best for a clear ranking on a single, critical metric. Library -> Chart.js/Canvas.
+        - Decision Matrix: Report Info -> Qualitative conclusions from the lab. Goal -> Summarize. Viz -> Two-column list. Interaction -> None. Justification -> Provides a clear, actionable summary of the lab's findings. Library -> HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4; /* Warm neutral background */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0A9396, #94D2BD);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center my-8 md:my-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#005F73] tracking-tight">The AI Engineer's Dilemma</h1>
+            <p class="text-xl md:text-2xl mt-4 font-light text-gray-600">Local LLM vs. Cloud API: A Performance Showdown on a Budget</p>
+        </header>
+
+        <section class="my-12">
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 card">
+                    <h2 class="text-2xl font-bold text-[#005F73]">The Core Challenge</h2>
+                    <p class="mt-4 text-gray-600">An ML Engineer is tasked with selecting a Large Language Model (LLM) for a new application. The catch? A fixed hardware budget. This interactive application visualizes the real-world trade-offs between running open-source models locally versus using a powerful cloud API, based on the findings from a standardized benchmark test conducted in a Google Colab environment.</p>
+                </div>
+                <div class="bg-[#005F73] text-white rounded-2xl shadow-lg p-8 flex flex-col items-center justify-center text-center">
+                    <h3 class="text-lg font-bold uppercase tracking-wider">Hardware Budget</h3>
+                    <p class="text-6xl font-black my-2 gradient-text bg-gradient-to-r from-teal-300 to-green-300">1x</p>
+                    <p class="text-2xl font-bold">NVIDIA T4 GPU</p>
+                    <p class="mt-2 text-teal-200">15,109 MB VRAM</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#005F73]">The Magic Trick: How Do Big Models Fit?</h2>
+            <div class="card max-w-5xl mx-auto">
+                 <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">To run large models on limited hardware, we use **quantization**. This technique reduces the precision of the model's numerical weights, drastically shrinking its memory footprint, much like compressing a high-resolution photo. Below, see how a 7-billion parameter model is transformed.</p>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
+                    <div class="md:col-span-2 text-center">
+                        <h3 class="text-xl font-semibold text-[#AE2012]">Problem: Standard 16-bit Model</h3>
+                        <div class="mt-4 p-4 border-2 border-dashed border-gray-300 rounded-lg relative h-48 flex items-center justify-center">
+                             <div class="w-11/12 h-full bg-[#AE2012] bg-opacity-20 rounded-md p-2 text-center flex flex-col justify-center">
+                                <span class="font-bold text-[#AE2012]">Full Precision</span>
+                                <span class="text-2xl font-extrabold text-[#AE2012]">~14 GB</span>
+                            </div>
+                            <div class="absolute -bottom-4 bg-white px-2 text-gray-500 text-sm">T4 GPU VRAM (15 GB)</div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-6">A standard 7B model requires ~14GB of VRAM, leaving almost no room for computation overhead.</p>
+                    </div>
+
+                    <div class="text-center text-5xl font-black text-[#0A9396] transform rotate-90 md:rotate-0">
+                        →
+                    </div>
+
+                    <div class="md:col-span-2 text-center">
+                         <h3 class="text-xl font-semibold text-[#0A9396]">Solution: 4-bit Quantization</h3>
+                        <div class="mt-4 p-4 border-2 border-dashed border-gray-300 rounded-lg relative h-48 flex items-center justify-center">
+                            <div class="w-1/3 h-full bg-[#0A9396] bg-opacity-20 rounded-md p-2 text-center flex flex-col justify-center">
+                                <span class="font-bold text-[#0A9396]">Quantized</span>
+                                <span class="text-2xl font-extrabold text-[#0A9396]">~4 GB</span>
+                            </div>
+                            <div class="absolute -bottom-4 bg-white px-2 text-gray-500 text-sm">T4 GPU VRAM (15 GB)</div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-6">By reducing numerical precision, the model's memory footprint shrinks by ~75%, making it viable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#005F73]">On-Device Showdown: Resource vs. Reward</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">This section presents the benchmark results from the lab. We tested three open-source models of increasing size, all quantized to 4-bit, to see how they perform on our T4 GPU. Interact with the charts by hovering over the bars to see precise metrics.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold text-center mb-4 text-[#005F73]">Metric 1: Memory Consumption</h3>
+                    <p class="text-sm text-center text-gray-500 mb-4">How much VRAM (GPU) and System RAM is consumed just to load the model?</p>
+                    <div class="chart-container">
+                        <canvas id="memoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold text-center mb-4 text-[#005F73]">Metric 2: Generation Speed</h3>
+                     <p class="text-sm text-center text-gray-500 mb-4">How long does it take to load the model and generate a response?</p>
+                    <div class="chart-container">
+                        <canvas id="speedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="my-16">
+             <h2 class="text-3xl font-bold text-center mb-2 text-[#005F73]">The Cloud Alternative: Gemini 1.5 Flash API</h2>
+             <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Instead of running a model locally, we can send a prompt to a managed API. This approach fundamentally changes the engineering trade-offs, abstracting away hardware management entirely.</p>
+             <div class="card">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center p-6 bg-gray-50 rounded-lg">
+                        <h4 class="text-lg font-semibold text-gray-700">VRAM Usage</h4>
+                        <p class="text-6xl font-black my-2 text-[#0A9396]">N/A</p>
+                        <p class="text-sm text-gray-500">The cloud provider manages all hardware. Your VRAM is untouched.</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 rounded-lg">
+                        <h4 class="text-lg font-semibold text-gray-700">Load Time</h4>
+                        <p class="text-6xl font-black my-2 text-[#0A9396]">N/A</p>
+                        <p class="text-sm text-gray-500">The model is always "hot" and ready to serve requests instantly.</p>
+                    </div>
+                     <div class="text-center p-6 bg-[#EE9B00] bg-opacity-10 rounded-lg border-2 border-dashed border-[#EE9B00]">
+                        <h4 class="text-lg font-semibold text-[#CA6702]">Cost Model Shift</h4>
+                        <p class="text-4xl md:text-6xl font-black my-2 text-[#CA6702]">¢</p>
+                        <p class="text-sm text-[#CA6702]">Cost shifts from hardware resources (VRAM) to usage (per-token pricing).</p>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-center mb-4 text-[#005F73]">Overall Performance Verdict</h3>
+                    <p class="text-sm text-center text-gray-500 mb-4">Comparing total time from prompt to full response across all contenders. The results are stark.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="totalTimeChart"></canvas>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#005F73]">The Engineer's Decision Matrix</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Based on the empirical data from the lab, the choice between a local model and a cloud API depends entirely on the project's specific priorities. This matrix summarizes the key decision factors.</p>
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card border-t-8 border-[#0A9396]">
+                    <h3 class="text-2xl font-bold text-[#005F73] flex items-center"><span class="text-4xl mr-4">💻</span> Choose Local Model When...</h3>
+                    <ul class="mt-6 space-y-4 text-gray-600 list-inside">
+                        <li class="flex items-start"><span class="text-[#0A9396] font-bold mr-2">✔</span> Cost predictability is paramount and you have fixed hardware.</li>
+                        <li class="flex items-start"><span class="text-[#0A9396] font-bold mr-2">✔</span> Data privacy is critical and data cannot leave your environment.</li>
+                        <li class="flex items-start"><span class="text-[#0A9396] font-bold mr-2">✔</span> You require offline functionality or have limited internet access.</li>
+                        <li class="flex items-start"><span class="text-[#0A9396] font-bold mr-2">✔</span> A "good enough" model with moderate performance meets project needs.</li>
+                    </ul>
+                </div>
+                 <div class="card border-t-8 border-[#EE9B00]">
+                    <h3 class="text-2xl font-bold text-[#CA6702] flex items-center"><span class="text-4xl mr-4">☁️</span> Choose Cloud API When...</h3>
+                    <ul class="mt-6 space-y-4 text-gray-600 list-inside">
+                        <li class="flex items-start"><span class="text-[#EE9B00] font-bold mr-2">✔</span> You need state-of-the-art quality and performance without hardware limits.</li>
+                        <li class="flex items-start"><span class="text-[#EE9B00] font-bold mr-2">✔</span> Rapid prototyping and fast time-to-market are the top priorities.</li>
+                        <li class="flex items-start"><span class="text-[#EE9B00] font-bold mr-2">✔</span> You want to avoid the complexity of managing hardware and model updates.</li>
+                        <li class="flex items-start"><span class="text-[#EE9B00] font-bold mr-2">✔</span> Usage is sporadic, making a pay-as-you-go model more economical.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-16 mb-8 text-gray-500 text-sm">
+            <p>This interactive application visualizes the findings from the "Model Marketplace Scavenger Hunt" lab assignment.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapLabel = (label, maxLength = 16) => {
+                if (typeof label !== 'string' || label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                }
+                if (currentLine) {
+                    lines.push(currentLine.trim());
+                }
+                return lines;
+            };
+
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                } else {
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#e5e7eb',
+                        },
+                        ticks: {
+                           color: '#6b7280',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                         ticks: {
+                           color: '#6b7280',
+                        }
+                    }
+                }
+            };
+
+            const palette = {
+                primary: '#0A9396', // Teal
+                secondary: '#94D2BD', // Light Teal
+                accent: '#EE9B00', // Amber
+                danger: '#AE2012', // Red
+                dark: '#005F73', // Dark Teal
+                light: '#E9D8A6', // Light Amber
+            };
+            
+            const memoryData = {
+                labels: ['Gemma 2B', 'Mistral 7B', 'Llama 3 8B'],
+                datasets: [
+                    {
+                        label: 'Peak VRAM (MB)',
+                        data: [2750, 5100, 7900],
+                        backgroundColor: palette.primary,
+                        borderColor: palette.primary,
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Peak System RAM (MB)',
+                        data: [3200, 5800, 9500],
+                        backgroundColor: palette.secondary,
+                        borderColor: palette.secondary,
+                        borderWidth: 1
+                    }
+                ]
+            };
+            const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+            new Chart(memoryCtx, {
+                type: 'bar',
+                data: memoryData,
+                options: { ...defaultChartOptions, scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Memory (MB)' } } } }
+            });
+
+            const speedData = {
+                labels: ['Gemma 2B', 'Mistral 7B', wrapLabel('Llama 3 8B (High OOM Risk)')],
+                datasets: [
+                    {
+                        label: 'Load Time (s)',
+                        data: [15, 35, 65],
+                        backgroundColor: palette.primary,
+                    },
+                    {
+                        label: 'Time to First Token (s)',
+                        data: [0.8, 1.9, 4.2],
+                        backgroundColor: palette.secondary,
+                    },
+                    {
+                        label: 'Total Generation Time (s)',
+                        data: [8, 15, 28],
+                        backgroundColor: palette.accent,
+                    }
+                ]
+            };
+            const speedCtx = document.getElementById('speedChart').getContext('2d');
+            new Chart(speedCtx, {
+                type: 'bar',
+                data: speedData,
+                options: { ...defaultChartOptions, scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Time (seconds)' } } } }
+            });
+
+            const totalTimeData = {
+                labels: ['Gemma 2B', 'Mistral 7B', 'Llama 3 8B', wrapLabel('Gemini 1.5 Flash (API)')],
+                datasets: [{
+                    label: 'Total Time to Generate Response (s)',
+                    data: [8, 15, 28, 1.5],
+                    backgroundColor: [
+                        palette.secondary,
+                        palette.secondary,
+                        palette.secondary,
+                        palette.accent,
+                    ],
+                    borderColor: [
+                        palette.primary,
+                        palette.primary,
+                        palette.primary,
+                        palette.danger,
+                    ],
+                    borderWidth: 2
+                }]
+            };
+            const totalTimeCtx = document.getElementById('totalTimeChart').getContext('2d');
+            new Chart(totalTimeCtx, {
+                type: 'bar',
+                data: totalTimeData,
+                options: { ...defaultChartOptions, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { ...defaultChartOptions.scales, x: { ...defaultChartOptions.scales.x, title: { display: true, text: 'Time (seconds)' } } } }
+            });
+        });
+    </script>
+
+</body>
+</html>
